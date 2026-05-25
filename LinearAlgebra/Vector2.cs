@@ -1,5 +1,7 @@
 namespace MathLib.LinearAlgebra;
 
+using MathLib.Constants;
+
 public struct Vector2
 {
     public float X;
@@ -31,10 +33,14 @@ public struct Vector2
         if (LengthSquared() == 0)
             return new Vector2(0, 0);
 
-        float length = Length();
+        return this / Length();
+    }
+
+    public static Vector2 operator -(Vector2 vec)
+    {
         return new Vector2(
-            X / length,
-            Y / length
+            -vec.X,
+            -vec.Y
         );
     }
 
@@ -69,6 +75,18 @@ public struct Vector2
     public static Vector2 operator *(float scalar, Vector2 vec)
     {
         return vec * scalar;
+    }
+
+    // Vector / scalar
+    public static Vector2 operator /(Vector2 vec, float scalar)
+    {
+        if (MathF.Abs(scalar) < MathConstants.NearlyZero)
+            throw new InvalidOperationException("Vector cannot be divided: scalar is zero.");
+
+        return new Vector2(
+            vec.X / scalar,
+            vec.Y / scalar
+        );
     }
 
     // Dot product

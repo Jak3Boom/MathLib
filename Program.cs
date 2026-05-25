@@ -13,14 +13,13 @@ class Program
         );
 
         Matrix3x3 m2 = new Matrix3x3(
+           -4, 2, 1,
             1, 2, 3,
-            4, 5, 6,
-            7, 8, 9
+            5, 1, 2
         );
 
-        Vector3 vec1 = new Vector3(1, 2, 3);
-        
-        Matrix3x3 res = m1 * m2;
-        Console.WriteLine(res.ToString());
+        Vector3 v1 = new Vector3(1, 2, -5);
+
+        Console.WriteLine((-v1).ToString());
     }
 }

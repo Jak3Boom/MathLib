@@ -7,10 +7,21 @@ public struct Matrix2x2
     public float M11, M12;
     public float M21, M22;
 
-    public Matrix2x2(float m11, float m12, float m21, float m22)
+    public Matrix2x2(
+        float m11, float m12,
+        float m21, float m22
+    )
     {
         M11 = m11; M12 = m12;
         M21 = m21; M22 = m22;
+    }
+
+    public static Matrix2x2 Identity()
+    {
+        return new Matrix2x2(
+            1, 0,
+            0, 1
+        );
     }
 
     public override string ToString()
@@ -43,15 +54,34 @@ public struct Matrix2x2
             vec.X * matrix.M21 + vec.Y * matrix.M22
         );
     }
-
-    // Matrix x Matrix
-    public static Matrix2x2 operator *(Matrix2x2 matrix2, Matrix2x2 matrix1)
+    
+    // Matrix + Matrix
+    public static Matrix2x2 operator +(Matrix2x2 left, Matrix2x2 right)
     {
         return new Matrix2x2(
-            matrix1.M11 * matrix2.M11 + matrix1.M21 * matrix2.M12, // M11
-            matrix1.M12 * matrix2.M11 + matrix1.M22 * matrix2.M12, // M12
-            matrix1.M11 * matrix2.M21 + matrix1.M21 * matrix2.M22, // M21
-            matrix1.M12 * matrix2.M21 + matrix1.M22 * matrix2.M22  // M22
+            left.M11 + right.M11, left.M12 + right.M12,
+            left.M21 + right.M21, left.M22 + right.M22
+        );
+    }
+
+    // Matrix - Matrix
+    public static Matrix2x2 operator -(Matrix2x2 left, Matrix2x2 right)
+    {
+        return new Matrix2x2(
+            left.M11 - right.M11, left.M12 - right.M12,
+            left.M21 - right.M21, left.M22 - right.M22
+        );
+    }
+
+    // Matrix x Matrix
+    public static Matrix2x2 operator *(Matrix2x2 left, Matrix2x2 right)
+    {
+        return new Matrix2x2(
+            right.M11 * left.M11 + right.M21 * left.M12, // M11
+            right.M12 * left.M11 + right.M22 * left.M12, // M12
+
+            right.M11 * left.M21 + right.M21 * left.M22, // M21
+            right.M12 * left.M21 + right.M22 * left.M22  // M22
         );
     }
 
@@ -59,6 +89,14 @@ public struct Matrix2x2
     public float Determinant()
     {
         return M11 * M22 - M21 * M12;
+    }
+
+    public Matrix2x2 Transpose()
+    {
+        return new Matrix2x2(
+            M11, M21,
+            M12, M22
+        );
     }
 
     // Inverse matrix
@@ -70,9 +108,9 @@ public struct Matrix2x2
             throw new InvalidOperationException("Matrix cannot be inverted: determinant is zero.");
 
         float invDet = 1f / det;
-        return new Matrix2x2(
-            M22 * invDet, -M12 * invDet,
-           -M21 * invDet,  M11 * invDet
+        return invDet * new Matrix2x2(
+            M22, -M12,
+           -M21,  M11
         );
     }
 }

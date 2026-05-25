@@ -19,6 +19,15 @@ public struct Matrix3x3
         M31 = m31; M32 = m32; M33 = m33;
     }
 
+    public static Matrix3x3 Identity()
+    {
+        return new Matrix3x3(
+            1, 0, 0,
+            0, 1, 0,
+            0, 0, 1
+        );
+    }
+
     public override string ToString()
     {
         return "\n" +
@@ -53,21 +62,77 @@ public struct Matrix3x3
         );
     }
 
-    // Matrix x Matrix
-    public static Matrix3x3 operator *(Matrix3x3 matrix2, Matrix3x3 matrix1)
+    // Matrix + Matrix
+    public static Matrix3x3 operator +(Matrix3x3 left, Matrix3x3 right)
     {
         return new Matrix3x3(
-            matrix1.M11 * matrix2.M11 + matrix1.M21 * matrix2.M12 + matrix1.M31 * matrix2.M13, // M11
-            matrix1.M12 * matrix2.M11 + matrix1.M22 * matrix2.M12 + matrix1.M32 * matrix2.M13, // M12
-            matrix1.M13 * matrix2.M11 + matrix1.M23 * matrix2.M12 + matrix1.M33 * matrix2.M13, // M13
+            left.M11 + right.M11, left.M12 + right.M12, left.M13 + right.M13,
+            left.M21 + right.M21, left.M22 + right.M22, left.M23 + right.M23,
+            left.M31 + right.M31, left.M32 + right.M32, left.M33 + right.M33
+        );
+    }
 
-            matrix1.M11 * matrix2.M21 + matrix1.M21 * matrix2.M22 + matrix1.M31 * matrix2.M23, // M21
-            matrix1.M12 * matrix2.M21 + matrix1.M22 * matrix2.M22 + matrix1.M32 * matrix2.M23, // M22
-            matrix1.M13 * matrix2.M21 + matrix1.M23 * matrix2.M22 + matrix1.M33 * matrix2.M23, // M23
+    // Matrix - Matrix
+    public static Matrix3x3 operator -(Matrix3x3 left, Matrix3x3 right)
+    {
+        return new Matrix3x3(
+            left.M11 - right.M11, left.M12 - right.M12, left.M13 - right.M13,
+            left.M21 - right.M21, left.M22 - right.M22, left.M23 - right.M23,
+            left.M31 - right.M31, left.M32 - right.M32, left.M33 - right.M33
+        );
+    }
 
-            matrix1.M11 * matrix2.M31 + matrix1.M21 * matrix2.M32 + matrix1.M31 * matrix2.M33, // M31
-            matrix1.M12 * matrix2.M31 + matrix1.M22 * matrix2.M32 + matrix1.M32 * matrix2.M33, // M32
-            matrix1.M13 * matrix2.M31 + matrix1.M23 * matrix2.M32 + matrix1.M33 * matrix2.M33  // M33
+    // Matrix x Matrix
+    public static Matrix3x3 operator *(Matrix3x3 left, Matrix3x3 right)
+    {
+        return new Matrix3x3(
+            right.M11 * left.M11 + right.M21 * left.M12 + right.M31 * left.M13, // M11
+            right.M12 * left.M11 + right.M22 * left.M12 + right.M32 * left.M13, // M12
+            right.M13 * left.M11 + right.M23 * left.M12 + right.M33 * left.M13, // M13
+
+            right.M11 * left.M21 + right.M21 * left.M22 + right.M31 * left.M23, // M21
+            right.M12 * left.M21 + right.M22 * left.M22 + right.M32 * left.M23, // M22
+            right.M13 * left.M21 + right.M23 * left.M22 + right.M33 * left.M23, // M23
+
+            right.M11 * left.M31 + right.M21 * left.M32 + right.M31 * left.M33, // M31
+            right.M12 * left.M31 + right.M22 * left.M32 + right.M32 * left.M33, // M32
+            right.M13 * left.M31 + right.M23 * left.M32 + right.M33 * left.M33  // M33
+        );
+    }
+
+    // Determinant
+    public float Determinant()
+    {
+        return (
+            M11 * (M22 * M33 - M32 * M23) -
+            M12 * (M21 * M33 - M31 * M23) +
+            M13 * (M21 * M32 - M31 * M22)
+        );
+    }
+
+    public Matrix3x3 Transpose()
+    {
+        return new Matrix3x3(
+            M11, M21, M31,
+            M12, M22, M32,
+            M13, M23, M33
+        );
+    }
+    
+    // Inverse matrix
+    public Matrix3x3 Inverse()
+    {
+        float det = Determinant();
+
+        if (MathF.Abs(det) < MathConstants.NearlyZero)
+            throw new InvalidOperationException("Matrix cannot be inverted: determinant is zero.");
+
+        float invDet = 1f / det;
+
+        return invDet * new Matrix3x3(
+            M22 * M33 - M32 * M23,      M32 * M13 - M12 * M33,      M12 * M23 - M22 * M13,
+            M23 * M31 - M33 * M21,      M33 * M11 - M13 * M31,      M13 * M21 - M23 * M11,
+            M21 * M32 - M31 * M22,      M31 * M12 - M11 * M32,      M11 * M22 - M21 * M12
         );
     }
 }
