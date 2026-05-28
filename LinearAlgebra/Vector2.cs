@@ -30,10 +30,14 @@ public struct Vector2
 
     public Vector2 Normalized()
     {
-        if (LengthSquared() == 0)
-            return new Vector2(0, 0);
+        if (LengthSquared() == 0f)
+            return new Vector2(0f, 0f);
 
-        return this / Length();
+        float length = Length();
+        return new Vector2(
+            X / length,
+            Y / length
+        );
     }
 
     public static Vector2 operator -(Vector2 vec)

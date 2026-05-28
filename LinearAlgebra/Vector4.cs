@@ -34,10 +34,16 @@ public struct Vector4
 
     public Vector4 Normalized()
     {
-        if (LengthSquared() == 0)
-            return new Vector4(0, 0, 0, 0);
+        if (LengthSquared() == 0f)
+            return new Vector4(0f, 0f, 0f, 0f);
             
-        return this / Length();
+        float length = Length();
+        return new Vector4(
+            X / length,
+            Y / length,
+            Z / length,
+            W / length
+        );
     }
 
     public static Vector4 operator -(Vector4 vec)

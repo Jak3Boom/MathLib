@@ -22,9 +22,9 @@ public struct Matrix3x3
     public static Matrix3x3 Identity()
     {
         return new Matrix3x3(
-            1, 0, 0,
-            0, 1, 0,
-            0, 0, 1
+            1f, 0f, 0f,
+            0f, 1f, 0f,
+            0f, 0f, 1f
         );
     }
 
@@ -35,6 +35,12 @@ public struct Matrix3x3
                 $"{M21,8:F2}{M22,8:F2}{M23,8:F2}\n" +
                 $"{M31,8:F2}{M32,8:F2}{M33,8:F2}\n";
     }
+
+    /*
+    ================
+    Basic math
+    ================
+    */
 
     // Matrix x Scalar
     public static Matrix3x3 operator *(Matrix3x3 matrix, float scalar)
@@ -133,6 +139,57 @@ public struct Matrix3x3
             M22 * M33 - M32 * M23,      M32 * M13 - M12 * M33,      M12 * M23 - M22 * M13,
             M23 * M31 - M33 * M21,      M33 * M11 - M13 * M31,      M13 * M21 - M23 * M11,
             M21 * M32 - M31 * M22,      M31 * M12 - M11 * M32,      M11 * M22 - M21 * M12
+        );
+    }
+
+    /*
+    ================
+    Transformations
+    ================
+    */
+
+    public static Matrix3x3 RotationX(float angleRadians)
+    {
+        float cos = MathF.Cos(angleRadians);
+        float sin = MathF.Sin(angleRadians);
+
+        return new Matrix3x3(
+            1f,  0f,   0f,
+            0f, cos, -sin,
+            0f, sin,  cos
+        );
+    }
+
+    public static Matrix3x3 RotationY(float angleRadians)
+    {
+        float cos = MathF.Cos(angleRadians);
+        float sin = MathF.Sin(angleRadians);
+
+        return new Matrix3x3(
+            cos, 0f, sin,
+             0f, 1f,  0f,
+           -sin, 0f, cos
+        );
+    }
+
+    public static Matrix3x3 RotationZ(float angleRadians)
+    {
+        float cos = MathF.Cos(angleRadians);
+        float sin = MathF.Sin(angleRadians);
+
+        return new Matrix3x3(
+            cos, -sin, 0f,
+            sin,  cos, 0f,
+             0f,   0f, 1f
+        );
+    }
+
+    public static Matrix3x3 Scale(float sx, float sy, float sz)
+    {
+        return new Matrix3x3(
+            sx, 0f, 0f,
+            0f, sy, 0f,
+            0f, 0f, sz
         );
     }
 }

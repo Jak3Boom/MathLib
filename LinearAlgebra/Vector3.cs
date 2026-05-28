@@ -32,10 +32,15 @@ public struct Vector3
 
     public Vector3 Normalized()
     {
-        if (LengthSquared() == 0)
-            return new Vector3(0, 0, 0);
+        if (LengthSquared() == 0f)
+            return new Vector3(0f, 0f, 0f);
             
-        return this / Length();
+        float length = Length();
+        return new Vector3(
+            X / length,
+            Y / length,
+            Z / length
+        );
     }
 
     public static Vector3 operator -(Vector3 vec)

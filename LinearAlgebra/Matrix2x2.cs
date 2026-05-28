@@ -19,8 +19,8 @@ public struct Matrix2x2
     public static Matrix2x2 Identity()
     {
         return new Matrix2x2(
-            1, 0,
-            0, 1
+            1f, 0f,
+            0f, 1f
         );
     }
 
@@ -30,6 +30,12 @@ public struct Matrix2x2
                 $"{M11,8:F2}{M12,8:F2}\n" + 
                 $"{M21,8:F2}{M22,8:F2}\n";
     }
+
+    /*
+    ================
+    Basic math
+    ================
+    */
 
     // Matrix x Scalar
     public static Matrix2x2 operator *(Matrix2x2 matrix, float scalar)
@@ -111,6 +117,31 @@ public struct Matrix2x2
         return invDet * new Matrix2x2(
             M22, -M12,
            -M21,  M11
+        );
+    }
+
+    /*
+    ================
+    Transformations
+    ================
+    */
+
+    public static Matrix2x2 Rotation(float angleRadians)
+    {
+        float cos = MathF.Cos(angleRadians);
+        float sin = MathF.Sin(angleRadians);
+
+        return new Matrix2x2(
+            cos, -sin,
+            sin,  cos
+        );
+    }
+
+    public static Matrix2x2 Scale(float sx, float sy)
+    {
+        return new Matrix2x2(
+            sx, 0f,
+            0f, sy
         );
     }
 }
