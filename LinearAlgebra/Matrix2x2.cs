@@ -4,8 +4,19 @@ using MathLib.Constants;
 
 public struct Matrix2x2
 {
+    /*
+    =========================================
+    1. Base Components
+    =========================================
+    */
+
     public float M11, M12;
     public float M21, M22;
+
+    public static Matrix2x2 Identity => new Matrix2x2(
+        1f, 0f,
+        0f, 1f
+    );
 
     public Matrix2x2(
         float m11, float m12,
@@ -16,99 +27,22 @@ public struct Matrix2x2
         M21 = m21; M22 = m22;
     }
 
-    public static Matrix2x2 Identity()
-    {
-        return new Matrix2x2(
-            1f, 0f,
-            0f, 1f
-        );
-    }
-
-    public override string ToString()
-    {
-        return "\n" +
-                $"{M11,8:F2}{M12,8:F2}\n" + 
-                $"{M21,8:F2}{M22,8:F2}\n";
-    }
-
     /*
-    ================
-    Basic math
-    ================
+    =========================================
+    2. Math (Properties & Methods)
+    =========================================
     */
 
-    // Matrix x Scalar
-    public static Matrix2x2 operator *(Matrix2x2 matrix, float scalar)
-    {
-        return new Matrix2x2(
-            matrix.M11 * scalar, matrix.M12 * scalar,
-            matrix.M21 * scalar, matrix.M22 * scalar
-        );
-    }
+    public float Determinant => M11 * M22 - M21 * M12;
 
-    // Scalar x Matrix
-    public static Matrix2x2 operator *(float scalar, Matrix2x2 matrix)
-    {
-        return matrix * scalar;
-    }
-
-    // Matrix x Vector
-    public static Vector2 operator *(Matrix2x2 matrix, Vector2 vec)
-    {
-        return new Vector2(
-            vec.X * matrix.M11 + vec.Y * matrix.M12,
-            vec.X * matrix.M21 + vec.Y * matrix.M22
-        );
-    }
+    public Matrix2x2 Transpose => new Matrix2x2(
+        M11, M21,
+        M12, M22
+    );
     
-    // Matrix + Matrix
-    public static Matrix2x2 operator +(Matrix2x2 left, Matrix2x2 right)
-    {
-        return new Matrix2x2(
-            left.M11 + right.M11, left.M12 + right.M12,
-            left.M21 + right.M21, left.M22 + right.M22
-        );
-    }
-
-    // Matrix - Matrix
-    public static Matrix2x2 operator -(Matrix2x2 left, Matrix2x2 right)
-    {
-        return new Matrix2x2(
-            left.M11 - right.M11, left.M12 - right.M12,
-            left.M21 - right.M21, left.M22 - right.M22
-        );
-    }
-
-    // Matrix x Matrix
-    public static Matrix2x2 operator *(Matrix2x2 left, Matrix2x2 right)
-    {
-        return new Matrix2x2(
-            right.M11 * left.M11 + right.M21 * left.M12, // M11
-            right.M12 * left.M11 + right.M22 * left.M12, // M12
-
-            right.M11 * left.M21 + right.M21 * left.M22, // M21
-            right.M12 * left.M21 + right.M22 * left.M22  // M22
-        );
-    }
-
-    // Determinant
-    public float Determinant()
-    {
-        return M11 * M22 - M21 * M12;
-    }
-
-    public Matrix2x2 Transpose()
-    {
-        return new Matrix2x2(
-            M11, M21,
-            M12, M22
-        );
-    }
-
-    // Inverse matrix
     public Matrix2x2 Inverse()
     {
-        float det = Determinant();
+        float det = Determinant;
 
         if (MathF.Abs(det) < MathConstants.NearlyZero)
             throw new InvalidOperationException("Matrix cannot be inverted: determinant is zero.");
@@ -119,12 +53,6 @@ public struct Matrix2x2
            -M21,  M11
         );
     }
-
-    /*
-    ================
-    Transformations
-    ================
-    */
 
     public static Matrix2x2 Rotation(float angleRadians)
     {
@@ -142,6 +70,97 @@ public struct Matrix2x2
         return new Matrix2x2(
             sx, 0f,
             0f, sy
+        );
+    }
+    
+    /*
+    =========================================
+    3. Operators
+    =========================================
+    */
+
+    public static Matrix2x2 operator *(Matrix2x2 matrix, float scalar)
+    {
+        return new Matrix2x2(
+            matrix.M11 * scalar, matrix.M12 * scalar,
+            matrix.M21 * scalar, matrix.M22 * scalar
+        );
+    }
+
+    public static Matrix2x2 operator *(float scalar, Matrix2x2 matrix)
+    {
+        return matrix * scalar;
+    }
+
+    public static Vector2 operator *(Matrix2x2 matrix, Vector2 vec)
+    {
+        return new Vector2(
+            vec.X * matrix.M11 + vec.Y * matrix.M12,
+            vec.X * matrix.M21 + vec.Y * matrix.M22
+        );
+    }
+    
+    public static Matrix2x2 operator +(Matrix2x2 left, Matrix2x2 right)
+    {
+        return new Matrix2x2(
+            left.M11 + right.M11, left.M12 + right.M12,
+            left.M21 + right.M21, left.M22 + right.M22
+        );
+    }
+
+    public static Matrix2x2 operator -(Matrix2x2 left, Matrix2x2 right)
+    {
+        return new Matrix2x2(
+            left.M11 - right.M11, left.M12 - right.M12,
+            left.M21 - right.M21, left.M22 - right.M22
+        );
+    }
+
+    public static Matrix2x2 operator *(Matrix2x2 left, Matrix2x2 right)
+    {
+        return new Matrix2x2(
+            right.M11 * left.M11 + right.M21 * left.M12, // M11
+            right.M12 * left.M11 + right.M22 * left.M12, // M12
+
+            right.M11 * left.M21 + right.M21 * left.M22, // M21
+            right.M12 * left.M21 + right.M22 * left.M22  // M22
+        );
+    }
+
+    public static bool operator ==(Matrix2x2 left, Matrix2x2 right)
+    {
+        return (left.M11 == right.M11) && (left.M12 == right.M12) &&
+               (left.M21 == right.M21) && (left.M22 == right.M22);
+    }
+
+    public static bool operator !=(Matrix2x2 left, Matrix2x2 right)
+    {
+        return !(left == right);
+    }
+
+    /*
+    =========================================
+    4. System Overrides
+    =========================================
+    */
+
+    public override string ToString()
+    {
+        return "\n" +
+                $"{M11,8:F2}{M12,8:F2}\n" + 
+                $"{M21,8:F2}{M22,8:F2}\n";
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is Matrix2x2 other && this == other;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(
+            M11, M12,
+            M21, M22
         );
     }
 }

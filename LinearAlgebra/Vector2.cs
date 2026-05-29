@@ -4,8 +4,16 @@ using MathLib.Constants;
 
 public struct Vector2
 {
+    /*
+    =========================================
+    1. Base Components
+    =========================================
+    */
+
     public float X;
     public float Y;
+
+    public static Vector2 Zero => new Vector2(0f, 0f);
 
     public Vector2(float x, float y)
     {
@@ -13,32 +21,43 @@ public struct Vector2
         Y = y;
     }
 
-    public override string ToString()
-    {
-        return $"({X}, {Y})";
-    }
+    /*
+    =========================================
+    2. Math (Properties & Methods)
+    =========================================
+    */
 
-    public float LengthSquared()
-    {
-        return X*X + Y*Y;
-    }
+    public float LengthSquared => X*X + Y*Y;
 
-    public float Length()
-    {
-        return MathF.Sqrt(LengthSquared());
-    }
+    public float Length => MathF.Sqrt(LengthSquared);
 
     public Vector2 Normalized()
     {
-        if (LengthSquared() == 0f)
+        if (LengthSquared == 0f)
             return new Vector2(0f, 0f);
 
-        float length = Length();
+        float length = Length;
         return new Vector2(
             X / length,
             Y / length
         );
     }
+
+    public static float Dot(Vector2 vec1, Vector2 vec2)
+    {
+        return (vec1.X * vec2.X) + (vec1.Y * vec2.Y);
+    }
+
+    public static float Cross(Vector2 vec1, Vector2 vec2)
+    {
+        return vec1.X * vec2.Y - vec1.Y * vec2.X;
+    }    
+
+    /*
+    =========================================
+    3. Operators
+    =========================================
+    */
 
     public static Vector2 operator -(Vector2 vec)
     {
@@ -47,8 +66,7 @@ public struct Vector2
             -vec.Y
         );
     }
-
-    // Vector addition
+    
     public static Vector2 operator +(Vector2 vec1, Vector2 vec2)
     {
         return new Vector2(
@@ -56,8 +74,7 @@ public struct Vector2
             vec1.Y + vec2.Y
         );
     }
-
-    // Vector subtraction
+    
     public static Vector2 operator -(Vector2 vec1, Vector2 vec2)
     {
         return new Vector2(
@@ -66,7 +83,6 @@ public struct Vector2
         );
     }
 
-    // Vector x Scalar
     public static Vector2 operator *(Vector2 vec, float scalar)
     {
         return new Vector2(
@@ -75,13 +91,11 @@ public struct Vector2
         );
     }
 
-    // Scalar x Vector
     public static Vector2 operator *(float scalar, Vector2 vec)
     {
         return vec * scalar;
     }
 
-    // Vector / scalar
     public static Vector2 operator /(Vector2 vec, float scalar)
     {
         if (MathF.Abs(scalar) < MathConstants.NearlyZero)
@@ -93,15 +107,34 @@ public struct Vector2
         );
     }
 
-    // Dot product
-    public static float Dot(Vector2 vec1, Vector2 vec2)
+    public static bool operator ==(Vector2 vec1, Vector2 vec2)
     {
-        return (vec1.X * vec2.X) + (vec1.Y * vec2.Y);
+        return (vec1.X == vec2.X) && (vec1.Y == vec2.Y);
     }
 
-    // Cross product
-    public static float Cross(Vector2 vec1, Vector2 vec2)
+    public static bool operator !=(Vector2 vec1, Vector2 vec2)
     {
-        return vec1.X * vec2.Y - vec1.Y * vec2.X;
+        return !(vec1 == vec2);
+    }
+
+    /*
+    =========================================
+    4. System Overrides
+    =========================================
+    */
+
+    public override string ToString()
+    {
+        return $"({X}, {Y})";
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is Vector2 other && this == other;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(X, Y);
     }
 }
