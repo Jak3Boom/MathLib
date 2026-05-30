@@ -125,7 +125,7 @@ public struct Vector2
 
     public override string ToString()
     {
-        return $"({X}, {Y})";
+        return $"({X:F3}, {Y:F3})";
     }
 
     public override bool Equals(object? obj)

@@ -147,8 +147,8 @@ public struct Matrix2x2
     public override string ToString()
     {
         return "\n" +
-                $"{M11,8:F2}{M12,8:F2}\n" + 
-                $"{M21,8:F2}{M22,8:F2}\n";
+                $"{M11,8:F3}{M12,8:F3}\n" + 
+                $"{M21,8:F3}{M22,8:F3}\n";
     }
 
     public override bool Equals(object? obj)

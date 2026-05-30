@@ -137,7 +137,7 @@ public struct Vector3
 
     public override string ToString()
     {
-        return $"({X}, {Y}, {Z})";
+        return $"({X:F3}, {Y:F3}, {Z:F3})";
     }
 
     public override bool Equals(object? obj)

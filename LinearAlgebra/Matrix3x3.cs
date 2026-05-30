@@ -195,9 +195,9 @@ public struct Matrix3x3
     public override string ToString()
     {
         return "Matrix3x3:\n" +
-                $"{M11,8:F2}{M12,8:F2}{M13,8:F2}\n" + 
-                $"{M21,8:F2}{M22,8:F2}{M23,8:F2}\n" +
-                $"{M31,8:F2}{M32,8:F2}{M33,8:F2}\n";
+                $"{M11,8:F3}{M12,8:F3}{M13,8:F3}\n" + 
+                $"{M21,8:F3}{M22,8:F3}{M23,8:F3}\n" +
+                $"{M31,8:F3}{M32,8:F3}{M33,8:F3}\n";
     }
 
     public override bool Equals(object? obj)

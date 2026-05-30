@@ -15,6 +15,8 @@ public struct Quaternion
 
     public static Quaternion Identity => new Quaternion (0f, 0f, 0f, 1f);
 
+    public Quaternion Conjugate => new Quaternion(-X, -Y, -Z, W);
+
     public Quaternion(float x, float y, float z, float w)
     {
         X = x;
@@ -44,16 +46,6 @@ public struct Quaternion
             Y / length,
             Z / length,
             W / length
-        );
-    }
-
-    public Quaternion Conjugate()
-    {
-        return new Quaternion(
-           -X,
-           -Y,
-           -Z,
-            W
         );
     }
 
@@ -90,6 +82,15 @@ public struct Quaternion
         return new Quaternion(newX, newY, newZ, newW);
     }
 
+    public static Vector3 operator *(Quaternion q, Vector3 vec)
+    {
+        Quaternion p = new Quaternion(vec.X, vec.Y, vec.Z, 0);
+
+        Quaternion pNew = q * p * q.Conjugate;
+
+        return new Vector3(pNew.X, pNew.Y, pNew.Z);
+    }
+
     /*
     =========================================
     4. System Overrides
@@ -98,6 +99,6 @@ public struct Quaternion
 
     public override string ToString()
     {
-        return $"({X:F2}, {Y:F2}, {Z:F2}, {W:F2})";
+        return $"({X:F3}, {Y:F3}, {Z:F3}, {W:F3})";
     }
 }
